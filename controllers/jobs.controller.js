@@ -1,7 +1,6 @@
 import JobsModel from "../models/jobs.model.js";
 import nodemailer from "nodemailer";
-import applicantValidation from "../middlewares/applicantValidation.middleware.js";
-console.log(JobsModel);
+
 export default class JobsController {
   constructor() {
     this.jobsModel = new JobsModel();
@@ -33,51 +32,32 @@ export default class JobsController {
   applyForJob(req, res) {
     const jobId = req.params.id;
     const job = this.jobsModel.getJobById(jobId);
-
     if (!job) {
       return res.status(404).send("Job not found");
     }
-
-    req.job = job;
-
-    applicantValidation(req, res, () => {
-      upload.single("applicantResume")(req, res, (err) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).send("Error uploading file");
-        }
-
-        const { applicantName, applicantEmail } = req.body;
-        const applicantResume = req.file;
-        console.log(applicantName, applicantEmail, applicantResume);
-        const transporter = nodemailer.createTransport({
-          // Configuring nodemailer
-
-          service: "Gmail",
-          auth: {
-            user: "sushildev.work@gmail.com",
-            pass: "trlo nabi sixh aqnc",
-          },
-        });
-
-        const mailOptions = {
-          from: "sushildev.work@gmail.com",
-          to: applicantEmail,
-          subject: "Application Submitted Successfully",
-          text: `Dear ${applicantName},\n\nYour application for the position at ${job.job_title} has been submitted successfully.\n\nThank you for applying!\n\nBest regards,\nThe Job Portal Team`,
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.error("Error sending email:", error);
-          } else {
-            console.log("Email sent:", info.response);
-          }
-        });
-
-        req.session.successMessage = "Application submitted successfully!";
-        return res.redirect("/jobs");
-      });
+    const { applicantName, applicantEmail } = req.body;
+    console.log(req.body, "requestbody")
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "sushildev.work@gmail.com",
+        pass: "trlo nabi sixh aqnc",
+      },
     });
+    const mailOptions = {
+      from: "sushildev.work@gmail.com",
+      to: applicantEmail, 
+      subject: "Application Submitted Successfully",
+      text: `Dear ${applicantName},\n\n \n Your application for the position at ${job.job_title} has been submitted successfully.\n\nThank you for applying!\n\nBest regards,\nThe Job Portal Team`,
+    };
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+      } else {
+        console.log("Email sent:", info.response);
+        res.render('jobs',()=> console.log(info.response))
+      }
+    });
+    return res.status(201).redirect("/jobs");
   }
 }

@@ -8,10 +8,10 @@ export default class JobsModel {
       pay: "14-20",
       applyTill: "24-4-2021",
       applicants: 0,
-      openings:3,
+      openings: 3,
       skill_set: "React ,node ,express, mongo ,git",
       created: new Date().toISOString(),
-      updated: new Date().toISOString()
+      updated: new Date().toISOString(),
     },
     {
       id: 2,
@@ -21,35 +21,34 @@ export default class JobsModel {
       pay: "12-20",
       applyTill: "30-6-2021",
       applicants: 0,
-      openings:12,
+      openings: 12,
       skill_set: "Java, Python, C++, JavaScript",
       created: new Date().toISOString(),
-      updated: new Date().toISOString()
+      updated: new Date().toISOString(),
     },
-   
   ];
 
   getAllJobs = () => {
     return this.jobs;
   };
 
-static add(newApplicant){
-  jobs.push(newApplicant)
-}
-  
-  getJobById(id) {
-    return this.jobs.find(job => job.id === parseInt(id));
-}
- 
+  static add(newApplicant) {
+    jobs.push(newApplicant);
+  }
 
+  getJobById(id) {
+    return this.jobs.find((job) => job.id === parseInt(id));
+  }
+
+ 
   applyForJob(jobId) {
     const jobIndex = this.jobs.findIndex(job => job.id === parseInt(jobId));
     if (jobIndex !== -1) {
-        this.jobs[jobIndex].applicants += 1;
-        return true;
+      this.jobs[jobIndex].applicants += 1;
+      this.jobs[jobIndex].updated = new Date().toISOString();
+      return true;
     }
     return false;
+  }
+ 
 }
-}
-
-

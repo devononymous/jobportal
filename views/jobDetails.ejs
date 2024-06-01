@@ -49,15 +49,15 @@
                 <form action="/jobs/<%= job.id %>" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="applicantName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="applicantName" name="applicantName">
+                        <input type="text" class="form-control" id="applicantName" name="applicantName" required>
                     </div>
                     <div class="mb-3">
                         <label for="applicantEmail" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="applicantEmail" name="applicantEmail">
+                        <input type="email" class="form-control" id="applicantEmail" name="applicantEmail" required>
                     </div>
                     <div class="mb-3">
                         <label for="applicantResume" class="form-label">Resume</label>
-                        <input type="file" class="form-control" id="applicantResume" name="applicantResume">
+                        <input type="file" class="form-control" id="applicantResume" name="applicantResume" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit Application</button>
                 </form>
