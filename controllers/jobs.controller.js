@@ -1,7 +1,6 @@
 import JobsModel from "../models/jobs.model.js";
 import nodemailer from "nodemailer";
 import applicantValidation from "../middlewares/applicantValidation.middleware.js";
-// am i missing something in this file
 console.log(JobsModel);
 export default class JobsController {
   constructor() {
