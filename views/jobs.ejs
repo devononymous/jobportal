@@ -1,0 +1,52 @@
+<div
+  class="container d-flex align-items-start p-4 mt-2"
+  style="min-height: 80vh"
+>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    <% jobs.forEach(job => { %>
+    <div class="col">
+      <div class="card p-0 h-100">
+        <div class="card-body">
+          <button
+            class="fw-light btn bg-success btn-sm btn-light rounded text-white text-left"
+          >
+            Actively hiring 🚀
+          </button>
+          <p class="fs-6 mt-2 mb-1"><%= job.job_title %></p>
+          <h6 class="card-subtitle mt-2 mb-2 text-muted">
+            Tech<span class="m-2 border border-2"><%= job.tech %></span>
+          </h6>
+          <p class="card-text mt-3 mb-1 fs-6">
+            <i class="fa-sharp fa-solid fa-location-dot"></i> <%= job.location
+            %>
+          </p>
+          <p class="card-text mt-1 mb-2">
+            <i class="fa-solid fa-indian-rupee-sign"></i> <%= job.pay %> LPA
+          </p>
+          <p class="card-text mt-1 mb-2">
+            Openings: <%= job.openings %>
+          </p>
+          <p class="card-text mt-1 mb-2">
+            Applicants: <%= job.applicants %>
+          </p>
+          
+          <div class="d-flex flex-wrap gap-2">
+            <% job.skill_set.split(',').forEach(skill => { %>
+            <button class="btn btn-outline-secondary btn-sm">
+              <%= skill.trim() %>
+            </button>
+            <% }) %>
+          </div>
+          <div class="text-center mt-3">
+            <a
+              href="/jobs/<%= job.id %>"
+              class="btn fs-6 text-white w-100 bg-grad"
+              >View details</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</div>
