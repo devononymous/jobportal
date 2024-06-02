@@ -11,6 +11,7 @@ export default class JobsController {
   }
   getLanding(req, res) {
     return res.render("landing");
+    // return res.render("landing");
   }
 
   getJobs(req, res) {
@@ -24,6 +25,7 @@ export default class JobsController {
     const job = this.jobsModel.getJobById(id);
     if (job) {
       return res.render("jobDetails", { job, errors });
+      // return res.render("/jobseeker/jobDetails", { job, errors });
     } else {
       return res.status(404).send("Job not found");
     }
@@ -31,12 +33,11 @@ export default class JobsController {
 
   applyForJob(req, res) {
     const jobId = req.params.id;
-    const job = this.jobsModel.getJobById(jobId);
+    const job = this.jobsModel.applyForJob(jobId);
     if (!job) {
       return res.status(404).send("Job not found");
     }
     const { applicantName, applicantEmail } = req.body;
-    console.log(req.body, "requestbody")
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
@@ -55,7 +56,6 @@ export default class JobsController {
         console.error("Error sending email:", error);
       } else {
         console.log("Email sent:", info.response);
-        res.render('jobs',()=> console.log(info.response))
       }
     });
     return res.status(201).redirect("/jobs");

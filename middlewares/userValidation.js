@@ -2,20 +2,13 @@
 import { body, validationResult } from "express-validator"
 
 
-const applicantValidation = async(req,res,next)=>{
+const userValidation = async(req,res,next)=>{
 const rules = [
- body('applicantName').isEmpty().withMessage("Name is required"),
- body('applicantEmail')
+ body('email').isEmpty().withMessage("Name is required"),
+ body('password')
  .isEmpty().withMessage("Email is required")
- .isEmail().withMessage("Invalid email format"),
- body('applicantResume')
-    .custom((value, { req }) => {
-      if (!req.file) {
-        throw new Error('Resume file is required');
-      }
-      return true; 
-    })
-    .isMimeType('application/pdf').withMessage('Resume can be any doc format') //
+ .isEmail().withMessage("Invalid email format")
+ //
 ];
  
 // 2. run those rules.
@@ -35,6 +28,6 @@ next();
 
 }
 
-export default applicantValidation
+export default userValidation
 
 

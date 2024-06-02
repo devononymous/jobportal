@@ -1,0 +1,53 @@
+
+    <div class="container my-4">
+        <h2 class="mb-4">Jobs</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Serial No</th>
+                    <th scope="col">Applicant Name</th>
+                    <th scope="col">Resume</th>
+                  
+                </tr>
+            </thead>
+            <tbody>
+                <% jobs.forEach((job, index) => { %>
+                    <tr>
+                        <th scope="row"><%= index + 1 + ((currentPage - 1) * pageSize) %></th>
+                        <td><%= job.id %></td>
+                        <td><%= job.applicantName %></td>
+                        <td><button class="btn btn-light btn-outilne-info"><%= job.applicantResume %></button></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <% if (currentPage > 1) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                <% } %>
+                
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                    </li>
+                <% } %>
+                
+                <% if (currentPage < totalPages) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                <% } %>
+            </ul>
+        </nav>
+    </div>
+
+    
