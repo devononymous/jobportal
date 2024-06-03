@@ -7,11 +7,21 @@ export default class UserModel {
       (this.userType = userType);
   }
   static add(name, email, password, userType) {
-    const newUser = new UserModel(users.length + 1, name, email, password, userType);
+    const newUser = new UserModel(
+      users.length + 1,
+      name,
+      email,
+      password,
+      userType
+    );
     users.push(newUser);
   }
   static isValidUser(email, password) {
-    const result = users.find((e) => e.email == email, e.password == password);
+    const result = users.find(
+      (e) => e.email === email && e.password === password
+    );
+    console.log("users models line 23 >>>", users)
   }
+
 }
 var users = [];

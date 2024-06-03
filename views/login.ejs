@@ -1,16 +1,20 @@
 <div class="  container d-flex flex-column flex-md-row align-items-center justify-content-around" style="min-height: 100vh;">
     <div class="d-none d-md-block">
-        <img class="rounded" src="https://images.unsplash.com/photo-1558655146-605d86ed31b3?q=80&w=1528&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" height="300" width="300" alt="login">
+        <img class="rounded" src="https://studentcover.in/login-illustration.svg"  height="300" width="350" alt="login">
     </div>
     <div class="card mb-2 p-4 w-80 w-md-100 animate__animated animate__backInUp">
 
         <form action="/login" method="post">
             <p class="fs-4 text-center text-success animate__animated animate__pulse"> Login to begin</p>
-            <% if (errorMessage) { %>
+            <% if (errorMessages && errorMessages.length > 0) { %>
                 <div class="alert alert-danger" role="alert">
-                    <%= errorMessage %>
+                  <ul>
+                    <% errorMessages.forEach(error => { %>
+                      <li><%= error.msg %></li>
+                    <% }); %>
+                  </ul>
                 </div>
-            <% } %>
+              <% } %>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email address</label>
                 <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" />
