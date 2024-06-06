@@ -1,18 +1,18 @@
 export default class UserModel {
-  constructor(id, name, email, password, userType) {
+  constructor(id, name, email, password, role) {
     (this.id = id),
       (this.name = name),
       (this.email = email),
       (this.password = password),
-      (this.userType = userType);
+      (this.role = role);
   }
-  static add(name, email, password, userType) {
+  static add(name, email, password, role) {
     const newUser = new UserModel(
       users.length + 1,
       name,
       email,
       password,
-      userType
+      role
     );
     users.push(newUser);
   }
@@ -20,7 +20,8 @@ export default class UserModel {
     const result = users.find(
       (e) => e.email === email && e.password === password
     );
-    console.log("users models line 23 >>>", users)
+    console.log("users models line 23 >>>", result)
+    return result
   }
 
 }

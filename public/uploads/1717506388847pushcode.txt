@@ -1,0 +1,336 @@
+dashboard.jsx
+
+import { useCallback, useEffect, useState } from "react";
+import { TbDiscountCheckFilled } from "react-icons/tb";
+import { Grid, Container, Box } from "@mui/material";
+import StatusCard from "../components/Dashboard/StatusCard";
+import { useTheme } from "@mui/material/styles";
+import { MdPending } from "react-icons/md";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { RiRefreshFill } from "react-icons/ri";
+import { BiSolidUserAccount } from "react-icons/bi";
+import AnnouncementCard from "../components/Dashboard/AnnouncementCard";
+import AvatarCard from "../components/Dashboard/AvatarCard";
+import DataTable from "../components/Dashboard/DataTable";
+
+// REDUX
+import { useSelector, useDispatch } from "react-redux";
+import {
+  useGetCompletedQuotesQuery,
+  useGetHerosQuery,
+  useGetInProcessQuotesQuery,
+  useGetPendingQuotesQuery,
+} from "../features/dashboardService/dashboard";
+import { useGetPostQuery } from "../features/dashboardService/dashboard";
+import {
+  storeRoles,
+  resetRoles,
+} from "../features/dashboardService/dashboardSlice";
+
+export default function Dashboard() {
+  // REDUX
+  const auth_user = useSelector((state) => state.auth.user);
+  const roles = useSelector((state) => state.dashboardSlice.roles);
+  const dispatch = useDispatch();
+  // Themeing
+  const theme = useTheme();
+  const isExtraSmallScreen = useMediaQuery(theme.breakpoints.down("xs"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between("md", "lg"));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
+
+  // REDUX HOOKS
+  const {
+    data: heros,
+    status: herosFetchingStatus,
+    isFetching: isFetchingHeros,
+    error: herosFetchingError,
+  } = useGetHerosQuery({}, { skip: false });
+
+  const {
+    data: announcement,
+    status: postFetchingStatus,
+    isFetching: isFetchingPost,
+    error: postFetchingError,
+  } = useGetPostQuery();
+  const { data: pendingQuotes } = useGetPendingQuotesQuery("pending");
+  const { data: completedQuotes } = useGetCompletedQuotesQuery("completed");
+  const { data: inProcessQuotes } = useGetInProcessQuotesQuery("inprocess");
+
+  // const countQuotesByStatus = (quotes, status) => {
+  //   return quotes.data.filter(
+  //     (quote) => quote.attributes.quote_status === status
+  //   ).length;
+  // };
+
+  const countQuotesByStatus = (quotes, status) => {
+    if (!quotes || !quotes.data || !Array.isArray(quotes.data)) {
+      return 0;
+    }
+
+    return quotes.data.filter(
+      (quote) => quote.attributes.quote_status === status
+    ).length;
+  };
+
+  // Grab Auth User email + respective role from fetched Heros data
+  const grabUserRoles = useCallback((fetched_heros, param) => {
+    // Init roles everyTime -- to avoid duplicates
+    dispatch(resetRoles());
+
+    fetched_heros.map((arr) => {
+      // Store user email + role in State
+      dispatch(storeRoles({ email: arr.email, role: arr.role.name }));
+    });
+  });
+
+  // Admin role
+  const [adminRole, setAdminRole] = useState();
+  useEffect(() => {
+    if (postFetchingStatus == "fulfilled") {
+      let adminEmail = announcement?.data.attributes.user.data.attributes.email;
+
+      // Make sure roles is not empty
+      if (roles.length != 0) {
+        // Grab Admin role from roles array
+        let admin_role = roles.filter((r) => r.email == adminEmail);
+
+        setAdminRole(admin_role[0].role);
+      }
+    }
+  });
+
+  //
+  useEffect(() => {
+    if (herosFetchingStatus == "fulfilled")
+      grabUserRoles(heros, auth_user?.email);
+  }, [heros]);
+
+  return (
+    <Container>
+      <Box display="flex" p={2} gap={4}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatusCard
+              title="Completed"
+              content={
+                countQuotesByStatus(completedQuotes, "completed") > 0
+                  ? countQuotesByStatus(completedQuotes, "completed")
+                  : "0"
+              }
+              icon={
+                <TbDiscountCheckFilled
+                  style={{
+                    width: isExtraSmallScreen
+                    ? "10px"
+                    : isSmallScreen
+                    ? "40px"
+                    : isMediumScreen
+                    ? "40px"
+                    : "80px",
+                  height: isExtraSmallScreen
+                    ? "10px"
+                    : isSmallScreen
+                    ? "60px"
+                    : isMediumScreen
+                    ? "40px"
+                    : "60px",
+                    color: "green",
+                    marginTop: 20,
+                  }}
+                />
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatusCard
+              title="Pending"
+              content={
+                countQuotesByStatus(pendingQuotes, "pending") > 0
+                  ? countQuotesByStatus(pendingQuotes, "pending")
+                  : "0"
+              }
+              icon={
+                <MdPending
+                  style={{
+                    width: isExtraSmallScreen
+                    ? "10px"
+                    : isSmallScreen
+                    ? "40px"
+                    : isMediumScreen
+                    ? "40px"
+                    : "80px",
+                  height: isExtraSmallScreen
+                    ? "10px"
+                    : isSmallScreen
+                    ? "60px"
+                    : isMediumScreen
+                    ? "40px"
+                    : "60px",
+                    color: "#47479b",
+                    marginTop: 20,
+                  }}
+                />
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatusCard
+              title="In process"
+              content={
+                countQuotesByStatus(inProcessQuotes, "inprocess") > 0
+                  ? countQuotesByStatus(inProcessQuotes, "inprocess")
+                  : "0"
+              }
+              icon={
+                <RiRefreshFill
+                  style={{
+                    width: isExtraSmallScreen
+                      ? "10px"
+                      : isSmallScreen
+                      ? "40px"
+                      : isMediumScreen
+                      ? "40px"
+                      : "80px",
+                    height: isExtraSmallScreen
+                      ? "10px"
+                      : isSmallScreen
+                      ? "60px"
+                      : isMediumScreen
+                      ? "40px"
+                      : "60px",
+                    color: "#8a3ea9",
+                    marginTop: 20,
+                  }}
+                />
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <StatusCard
+              title="Total Heros"
+              content="35"
+              icon={
+                <BiSolidUserAccount
+                  style={{
+                    width: isExtraSmallScreen
+                      ? "10px"
+                      : isSmallScreen
+                      ? "40px"
+                      : isMediumScreen
+                      ? "40px"
+                      : "80px",
+                    height: isExtraSmallScreen
+                      ? "10px"
+                      : isSmallScreen
+                      ? "60px"
+                      : isMediumScreen
+                      ? "40px"
+                      : "60px",
+                    color: "#252725",
+                    marginTop: 20,
+                  }}
+                />
+              }
+            />
+          </Grid>
+        </Grid>
+      </Box>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={12} md={8} lg={9} xl={9}>
+          {postFetchingStatus == "fulfilled" ? (
+            <AnnouncementCard
+              name={announcement?.data.attributes.user.data.attributes.email}
+              role={adminRole || ""}
+              creationDate={announcement?.data.attributes.createdAt.slice(
+                0,
+                10
+              )}
+              header="Announcement"
+              mainContent={announcement?.data.attributes.content}
+            />
+          ) : (
+            <AnnouncementCard
+              name=""
+              role=""
+              creationDate=""
+              header="Announcement"
+              mainContent="Loading..."
+            />
+          )}
+        </Grid>
+        <Grid item xs={12} sm={12} md={4} lg={3} xl={3}>
+          <AvatarCard
+            heros={heros}
+            isFetching={isFetchingHeros}
+            fetchingError={herosFetchingError}
+            fetchingStatus={herosFetchingStatus}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid>
+        <DataTable />
+      </Grid>
+    </Container>
+  );
+}
+
+
+
+dashboar.js
+
+
+import {
+  createApi,
+  fetchBaseQuery,
+  
+} from "@reduxjs/toolkit/query/react";
+
+export const Dashboard = createApi({
+  reducerPath: "dashboard",
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_STRAPI_URL }),
+  endpoints: (builder) => ({
+    getHeros: builder.query({
+      query: () => ({
+        url: "/users?populate=*",
+        method: "GET",
+      }),
+    }),
+    getPendingQuotes: builder.query({
+      query: (status) => `quotes?filters[quote_status][$eq]=${status}`,
+    }),
+
+    getCompletedQuotes: builder.query({
+      query: (status) => `quotes?filters[quote_status][$eq]=${status}`,
+    }),
+
+    getInProcessQuotes: builder.query({
+      query: (status) => `quotes?filters[quote_status][$eq]=${status}`,
+    }),
+
+    getPost: builder.query({
+      query: () => ({
+        url: "/announcement",
+        method: "GET",
+      }),
+    }),
+    getQuotes: builder.query({
+      query: () => ({
+        url: "/quotes",
+        method: "GET",
+      }),
+    }),
+  }),
+});
+
+export const {
+  useGetHerosQuery,
+  useGetPostQuery,
+  useGetQuotesQuery,
+  useGetInProcessQuotesQuery,
+  useGetCompletedQuotesQuery,
+  useGetPendingQuotesQuery,
+} = Dashboard;
+
+

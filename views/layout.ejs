@@ -89,22 +89,25 @@
             </li>
           </ul>
 
-         
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button
-              class="btn text-white bg-grad btn-outline-success"
-              type="submit"
-            >
-              Search
-            </button>
-          </form>
-        </div>
+        <!-- Login and Logout Buttons -->
+<div class="d-flex justify-content-center">
+  <% if (locals.userEmail) { %>
+  <form action="/logout" method="POST">
+    <button class="btn btn-light btn-md btn-outline-danger border-1 mt-1 mx-3" type="submit">Logout</button>
+  </form>
+  <% } else { %>
+  <form action="/login" method="POST">
+    <button class="btn btn-light btn-md bg-grad text-white border-1 mt-1 mx-3" type="submit">Login</button>
+  </form>
+  <% } %>
+  
+  <!-- Search Bar -->
+  <form class="d-flex" role="search">
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn text-white bg-grad btn-outline-success" type="submit">Search</button>
+  </form>
+</div>
+
       </div>
     </nav>
     <%-body%>

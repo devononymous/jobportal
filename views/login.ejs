@@ -1,11 +1,11 @@
 <div class="  container d-flex flex-column flex-md-row align-items-center justify-content-around" style="min-height: 100vh;">
     <div class="d-none d-md-block">
-        <img class="rounded" src="https://studentcover.in/login-illustration.svg"  height="300" width="350" alt="login">
+        <img class="rounded animate__animated animate__bounceInLeft" src="https://studentcover.in/login-illustration.svg"  height="300" width="350" alt="login">
     </div>
-    <div class="card mb-2 p-4 w-80 w-md-100 animate__animated animate__backInUp">
+    <div class="card mb-2 p-4 w-80 w-md-100 animate__animated animate__bounceInRight">
 
         <form action="/login" method="post">
-            <p class="fs-4 text-center text-success animate__animated animate__pulse"> Login to begin</p>
+            <p class="fs-4 text-center text-success "> Login to begin</p>
             <% if (errorMessages && errorMessages.length > 0) { %>
                 <div class="alert alert-danger" role="alert">
                   <ul>
@@ -15,6 +15,7 @@
                   </ul>
                 </div>
               <% } %>
+              
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email address</label>
                 <input type="email" class="form-control" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" />

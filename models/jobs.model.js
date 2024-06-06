@@ -43,10 +43,11 @@ export default class JobsModel {
  
   applyForJob(jobId) {
     const jobIndex = this.jobs.findIndex(job => job.id === parseInt(jobId));
-    if (jobIndex !== -1) {
-      this.jobs[jobIndex].applicants += 1;
-      this.jobs[jobIndex].updated = new Date().toISOString();
-      return true;
+    const job = new JobsModel.jobs[jobIndex].id
+    console.log("job", job)
+    if (job !== -1) {
+      this.jobs[job].applicants += 1;
+       return job
     }
     return false;
   }

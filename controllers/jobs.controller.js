@@ -25,7 +25,7 @@ export default class JobsController {
     const job = this.jobsModel.getJobById(id);
     if (job) {
       return res.render("jobDetails", { job, errors });
-      // return res.render("/jobseeker/jobDetails", { job, errors });
+
     } else {
       return res.status(404).send("Job not found");
     }
@@ -34,6 +34,7 @@ export default class JobsController {
   applyForJob(req, res) {
     const jobId = req.params.id;
     const job = this.jobsModel.applyForJob(jobId);
+    console.log('job>>>', job)
     if (!job) {
       return res.status(404).send("Job not found");
     }
@@ -58,6 +59,7 @@ export default class JobsController {
         console.log("Email sent:", info.response);
       }
     });
-    return res.status(201).redirect("/jobs");
+    return res.status(201).render("jobs", {successMessage:"Applied successfully"});
+
   }
 }
